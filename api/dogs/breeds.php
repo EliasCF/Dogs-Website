@@ -25,14 +25,13 @@
     $query_string;
     parse_str($_SERVER['QUERY_STRING'], $query_string);
 
-    $no_queries = (isset($query_string['breed']) || isset($query_string['amount'])) ? false : true;
+    $no_queries = count($query_string) > 0 ? false : true;
 
     if (isset($query_string['breed'])) {
         $api_string .= 'breed/' . $query_string['breed'] . '/images';
     }
 
-    //If no query string has been provided,
-    //then get all breeds
+    //If no query strings have been provided, then get all breeds
     if ($no_queries) {
         $api_string .= 'breeds/list/all';
     }
@@ -48,10 +47,6 @@
     }
 
     http_response_code($response_code);
-    
-    if ($no_queries) {
-        echo $result;
-    } else {
-        echo implode(' ', $result);
-    }
+
+    echo json_encode($no_queries ? json_decode($result)->message : $result); 
 ?>

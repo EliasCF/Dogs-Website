@@ -4,7 +4,7 @@ var IndexApp = new Vue({
         stuff: ''
     },
     created: function () {
-        $.get('/api/dogs/breeds?amount=1', (data) => {
+        $.get('api/dogs/breeds.php', (data) => {
             this.stuff = data;
         });
     }
