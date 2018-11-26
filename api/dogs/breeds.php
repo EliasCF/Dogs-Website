@@ -12,6 +12,7 @@
      * 
      *      - Getting an X amount of dogs of a certain breed:
      *        URL: http://www.website.com/api/dogs/breeds.php?breed=beagle&amount=10
+     *        NOTE: The 'amount' query string will return an error if used alone
      */
     
     //Set http headers
@@ -20,12 +21,20 @@
 
     $response_code = 200;
     $api_string = 'https://dog.ceo/api/';
+    $error = false;
 
     //Get query string(s)
     $query_string;
     parse_str($_SERVER['QUERY_STRING'], $query_string);
 
+    //Indicates whether there are any query strings in the url
     $no_queries = count($query_string) > 0 ? false : true;
+
+    //An error occurs if 'amount' is the only query string
+    if (count($query_string) == 1 && isset($query_string['amount'])) {
+        $response_code = 500;
+        $error = true;
+    }
 
     if (isset($query_string['breed'])) {
         $api_string .= 'breed/' . $query_string['breed'] . '/images';
@@ -36,17 +45,29 @@
         $api_string .= 'breeds/list/all';
     }
 
-    //Get api data
-    ini_set("allow_url_fopen", 1);
-    $data = file_get_contents($api_string);
+    //Call dog api if no errors have occured yet
+    if (!$error) {
+        ini_set("allow_url_fopen", 1);
+        $data = file_get_contents($api_string);
 
-    $result = $no_queries ? $data : json_decode($data)->message;
+        $result = $no_queries ? $data : json_decode($data)->message;
 
-    if (isset($query_string['amount'])) {
-        $result =  array_slice($result, 0, $query_string['amount']);
+        if (isset($query_string['amount'])) {
+            //Check if amount can be converted to an integer
+            if (intval($query_string['amount']) != 0) {
+                $result =  array_slice($result, 0, $query_string['amount']);
+            } else {
+                $response_code = 500;
+                $error = true;
+            }
+        }
     }
 
     http_response_code($response_code);
 
-    echo json_encode($no_queries ? json_decode($result)->message : $result); 
+    if (!$error) {
+        echo json_encode($no_queries ? json_decode($result)->message : $result); 
+    } else {
+        echo '{ \'status\': \'error\' }';
+    }
 ?>
