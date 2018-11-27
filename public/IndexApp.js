@@ -2,7 +2,8 @@ var IndexApp = new Vue({
     el: '#IndexApp',
     data: {
         dogs: {},
-        images: {}
+        images: {},
+        amount: 20
     },
     created: function () {
         $.get('api/dogs/breeds.php', (data) => {
@@ -11,7 +12,9 @@ var IndexApp = new Vue({
     },
     methods: {
         getBreed: function (breed) {
-            console.log(breed);
+            $.get(`api/dogs/breeds.php?breed=${breed}&amount=${this.amount}`, (data) => {
+                this.images = data;
+            });
         }
     }
 });

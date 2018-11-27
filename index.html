@@ -10,34 +10,43 @@
 	</head>
   	<body>
   		<div id="IndexApp">
-			<div class="row">
-				<div class="col-sm-4">
-					<ul class="list-group">
-						<li class="list-group-item active"><strong>Breeds</strong></li>
-						<li class="list-group-item" v-for="(key, value) in dogs">
-							<div v-if="key.length > 0">
-								<ul class="list-group">
-									<li class="list-group-item list-group-item-secondary">{{value}}</li>
-									<li class="list-group-item" v-for="sub in key">
-										<div v-on:click="getBreed((value + '-' + sub))">
-											{{value}}-{{sub}}
-										</div>
-									</li>
-								</ul>
-							</div>
-							<div v-else>
-								<div v-on:click="getBreed((value))">
-									{{value}}
+			<div class="text-center">
+				<div class="row">
+					<!--
+						Dog breed list
+					-->
+					<div class="col-3">
+						<div class="list-group">
+							<li class="list-group-item active" disabled><strong>Breeds</strong></li>
+							<li class="list-group-item list-group-item-action" v-for="(key, value) in dogs">
+								<div v-if="key.length > 0">
+									<ul class="list-group">
+										<li class="list-group-item list-group-item-secondary">{{value}}</li>
+										<li class="list-group-item list-group-item-action" v-for="sub in key">
+											<div v-on:click="getBreed((value + '-' + sub))">
+												{{value}}-{{sub}}
+											</div>
+										</li>
+									</ul>
 								</div>
-							</div>
-						</li>
-					</ul>
-				</div>
-				<div class="col-sm-10">
-
+								<div v-else>
+									<div v-on:click="getBreed((value))">
+										{{value}}
+									</div>
+								</div>
+							</li>
+						</div>
+					</div>
+					<!--
+						Dogs pictures
+					-->
+					<div class="col-9">
+						<div v-for="image in images">
+							<img :src="image">
+						</div>
+					</div>
 				</div>
 			</div>
-			
 		</div>
   	</body>
 	<footer>
