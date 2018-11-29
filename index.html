@@ -29,7 +29,7 @@
 									</ul>
 								</div>
 								<div v-else>
-									<div v-on:click="getBreed((value))">
+									<div v-on:click="getBreed(value)">
 										{{value}}
 									</div>
 								</div>
@@ -46,6 +46,10 @@
 									<img class="img-fluid" :src="image" alt="image">
 								</div>
 							</div>
+						</div>
+						<div v-if="currentBreed != ''">
+							<hr>
+							<button class="btn btn-primary" v-on:click="loadMore">Load more</button>
 						</div>
 					</div>
 				</div>
