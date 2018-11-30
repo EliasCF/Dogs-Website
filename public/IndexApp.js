@@ -3,7 +3,7 @@ var IndexApp = new Vue({
     data: {
         dogs: {},
         images: {},
-        amount: 20,
+        amount: 21,
         currentBreed: ''
     },
     created: function () {
@@ -24,7 +24,7 @@ var IndexApp = new Vue({
         getBreed: function (breed) {
             //Reset this.amount in case the 'breed' variable is a new breed
             if (breed != this.currentBreed) {
-                this.amount = 20;
+                this.amount = 21;
             }
 
             $.get(`api/dogs/breeds.php?breed=${breed}&amount=${this.amount}`, (data) => {
@@ -43,10 +43,10 @@ var IndexApp = new Vue({
         },
         /*
          * @Description:
-         *      Loads an additional 20 images
+         *      Loads an additional 21 images
          */
         loadMore: function() {
-            this.amount += 20;
+            this.amount += 21;
 
             this.getBreed(this.currentBreed);
         }

@@ -15,7 +15,7 @@
 						Dog breed list
 					-->
 					<div class="col-3">
-						<div class="list-group">
+						<div class="list-group sidemenu">
 							<li class="list-group-item active" disabled><strong>Breeds</strong></li>
 							<li class="list-group-item list-group-item-action" v-for="(key, value) in dogs">
 								<div v-if="key.length > 0">
@@ -60,5 +60,16 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
 		<script src="public/IndexApp.js"></script>
+		<style>
+			.sidemenu {
+				height: 100%;
+				width: 20%;
+				position: fixed;
+				z-index: 1;
+				top: 0;
+				left: 0;
+				overflow-x: hidden;
+			}
+		</style>
 	</footer>
 </html>
