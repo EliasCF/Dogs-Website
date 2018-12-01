@@ -1,4 +1,21 @@
 <?php 
+    include 'ApiWrapper.php';
+
+    $array = array(
+		'breed' => new QueryObject('breed/@/images', true, NULL),
+		'amount' => new QueryObject(NULL, false, function($ApiObject) {
+			if (intval($ApiObject->qs['amount']) != 0) {
+				return array_slice($ApiObject->result, 0, $ApiObject->qs['amount']);
+			}
+			
+			$ApiObject->response = 500;
+			$ApiObject->error = true;
+		})
+	);
+	
+	$a = new ApiWrapper($_SERVER['QUERY_STRING'], 'https://dog.ceo/api/', 'breeds/list/all', $array);
+	$a->execute();
+
     /*
      * This is a Rest API wrapper for the dog.ceo api
      * Its purpose is to be called in a url.
@@ -13,7 +30,7 @@
      *      - Getting an X amount of dogs of a certain breed:
      *        URL: http://www.website.com/api/dogs/breeds.php?breed=beagle&amount=10
      *        NOTE: The 'amount' query string will return an error if used alone
-     */
+     *
     
     //Set http headers
     header('Access-Control-Allow-Origin: *');
@@ -70,4 +87,5 @@
     } else {
         echo '{ \'status\': \'error\' }';
     }
+    */
 ?>
