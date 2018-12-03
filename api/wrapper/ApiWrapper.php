@@ -36,9 +36,8 @@
 		//Indicate whether an error has occurd
 		public $error = false;
 
-		public $data;
-		
-		
+		public $api_call_data;
+
 		/*
 		 * Params:
 		 *  	- $api_string: Base url to the REST API
@@ -68,14 +67,16 @@
 				foreach ($this->query_object_arr as $key => $value) {
 					//If index is to be done before the api call,
 					//and the url is not NULL
-					if ($value->do_before_call && $value->url != NULL) {
-						$this->api_string .= str_replace('@', $query_string[$key], $value->url);
+					if (isset($query_string[$key])) {
+						if ($value->do_before_call && $value->url != NULL) {
+							$this->api_string .= str_replace('@', $query_string[$key], $value->url);
+						}
 					}
 				}
 			}
 
 			ini_set("allow_url_fopen", 1);
-			$this->data = file_get_contents($this->api_string);
+			$this->api_call_data = file_get_contents($this->api_string);
 
             /*
              * After API call
@@ -84,7 +85,7 @@
 			foreach ($this->query_object_arr as $key => $value) {
 				if (isset($query_string[$key])) {
 					if (!$value->do_before_call) {
-						$this->data = $value->functionallity->__invoke($this);
+						$api_call_data = $value->functionallity->__invoke($this);
 
 						$function_flag = true;
 					}
@@ -92,7 +93,7 @@
 			}
 
 			if (!$function_flag) {
-				$this->data = json_decode($this->data)->message;
+				$this->api_call_data = json_decode($this->api_call_data)->message;
 			}
 
 			//Set headers
@@ -102,7 +103,7 @@
 			//Set response code
 			http_response_code($this->response_code);
 
-			echo json_encode($this->data);
+			echo json_encode($this->api_call_data);
 		}
 	}
 ?>
