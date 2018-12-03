@@ -8,7 +8,7 @@ var IndexApp = new Vue({
     },
     created: function () {
         //Load a list of dog breeds
-        $.get('api/dogs/breeds.php', (data) => {
+        $.get('api/breeds.php', (data) => {
             this.dogs = data;
         });
     },
@@ -27,7 +27,7 @@ var IndexApp = new Vue({
                 this.amount = 21;
             }
 
-            $.get(`api/dogs/breeds.php?breed=${breed}&amount=${this.amount}`, (data) => {
+            $.get(`api/breeds.php?breed=${breed}&amount=${this.amount}`, (data) => {
                 this.images = [];
 
                 //Sort data into rows of 3

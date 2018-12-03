@@ -35,6 +35,8 @@
 		
 		//Indicate whether an error has occurd
 		public $error = false;
+
+		public $data;
 		
 		
 		/*
@@ -49,22 +51,10 @@
 			$this->query_object_arr = $_query_object_arr;
 		}
 		
-		//Returns an array of string queries
-		private function get_query_array() {
-			$query_string;
-            parse_str($this->query, $query_string);
-            
-            return $query_string;
-		}
-		
-		private function call_api($api_url) {
-			ini_set("allow_url_fopen", 1);
-			return file_get_contents($api_url);
-		}
-		
 		public function execute() {
 			//Get query string(s)
-			$query_string = $this->get_query_array();
+			$query_string;
+            parse_str($this->query, $query_string);
 			
 			//Check if the defined queries are in the url
 			$no_queries = (count($query_string) > 0 ? false : true);
@@ -84,21 +74,35 @@
 				}
 			}
 
-			$data = $this->call_api($this->api_string);
-            
+			ini_set("allow_url_fopen", 1);
+			$this->data = file_get_contents($this->api_string);
+
             /*
              * After API call
              */
+			$function_flag = false;
 			foreach ($this->query_object_arr as $key => $value) {
-				if (!$value->do_before_call) {
-					$data = $value->functionallity($this);
+				if (isset($query_string[$key])) {
+					if (!$value->do_before_call) {
+						$this->data = $value->functionallity->__invoke($this);
+
+						$function_flag = true;
+					}
 				}
 			}
+
+			if (!$function_flag) {
+				$this->data = json_decode($this->data)->message;
+			}
+
+			//Set headers
+			header('Access-Control-Allow-Origin: *');
+    		header('Content-Type: application/json; charset=UTF-8');
 			
 			//Set response code
 			http_response_code($this->response_code);
-			
-			echo '';
+
+			echo json_encode($this->data);
 		}
 	}
 ?>
