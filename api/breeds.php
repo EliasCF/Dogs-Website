@@ -19,7 +19,7 @@
     $Configuration = array(
         'breed' => new QueryObject('breed/@/images', true, NULL),
         'random' => new QueryObject('/random/@', true, NULL),
-		'amount' => new QueryObject(NULL, false, function($ApiObject) {
+        'amount' => new QueryObject(NULL, false, function($ApiObject) {
             $query_string;
             parse_str($ApiObject->query, $query_string);
 

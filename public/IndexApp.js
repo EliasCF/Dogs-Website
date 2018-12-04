@@ -4,7 +4,8 @@ var IndexApp = new Vue({
         dogs: {},
         images: {},
         amount: 21,
-        currentBreed: ''
+        currentBreed: '',
+        checked: false
     },
     created: function () {
         //Load a list of dog breeds
@@ -22,12 +23,23 @@ var IndexApp = new Vue({
          *          The breed to be fetched
          */
         getBreed: function (breed) {
-            //Reset this.amount in case the 'breed' variable is a new breed
+
+            //Check if the 'breed' variable is a new breed
             if (breed != this.currentBreed) {
                 this.amount = 21;
+
+                //Jump to the top of the page
+                document.body.scrollTop = 0;
+                document.documentElement.scrollTop = 0;
             }
 
-            $.get(`api/breeds.php?breed=${breed}&amount=${this.amount}`, (data) => {
+            var amountQueryString = 'amount';
+
+            if (this.checked) {
+                amountQueryString = 'random';
+            }
+
+            $.get(`api/breeds.php?breed=${breed}&${amountQueryString}=${this.amount}`, (data) => {
                 this.images = [];
 
                 //Sort data into rows of 3
