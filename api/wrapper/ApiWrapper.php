@@ -7,6 +7,7 @@
 		//an annonymous function
 		public $functionallity;
 		
+		//
 		public $do_before_call = false;
 		
 		public function __construct($_url, $_do_before_call, $_functionallity) {
@@ -85,7 +86,7 @@
 			foreach ($this->query_object_arr as $key => $value) {
 				if (isset($query_string[$key])) {
 					if (!$value->do_before_call) {
-						$api_call_data = $value->functionallity->__invoke($this);
+						$this->api_call_data = $value->functionallity->__invoke($this);
 
 						$function_flag = true;
 					}
@@ -96,13 +97,14 @@
 				$this->api_call_data = json_decode($this->api_call_data)->message;
 			}
 
-			//Set headers
+			//Set response headers
 			header('Access-Control-Allow-Origin: *');
     		header('Content-Type: application/json; charset=UTF-8');
 			
 			//Set response code
 			http_response_code($this->response_code);
 
+			//Print json data
 			echo json_encode($this->api_call_data);
 		}
 	}
