@@ -1,0 +1,22 @@
+.sidemenu {
+	height: 100%;
+	width: 24.5%;
+
+	top: 0;
+	left: 0;
+
+	position: fixed;
+	z-index: 1;
+	overflow-x: hidden;
+}
+
+.vertical-center {
+	min-height: 100%;
+	min-height: 100vh;
+
+	display: flex;
+	align-items: center;
+	padding-left: 30%;
+
+	background-color: white;
+}

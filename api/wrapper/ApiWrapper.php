@@ -37,6 +37,7 @@
 		//Indicate whether an error has occurd
 		public $error = false;
 
+		//Data fetched from the api
 		public $api_call_data;
 
 		/*

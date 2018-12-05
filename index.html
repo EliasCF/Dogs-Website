@@ -6,13 +6,14 @@
 		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+		<link rel="stylesheet" type="text/css" href="public/css//IndexStyle.css">
 	</head>
   	<body>
   		<div id="IndexApp">
 			<div class="text-center">
-				<div class="table-bordered">
-					<input type="checkbox" id="checkbox" v-model="checked" autocomplete="off"> Random
-					<label for="checkbox">{{ checked }}</label>
+				<div class="table-bordered" style="background-color: #60afff">
+					<strong>Random pictures</strong><br>
+					<input type="checkbox" id="checkbox" v-model="randomChecked" autocomplete="off">
 				</div>
 				<div class="row">
 					<!--
@@ -43,17 +44,24 @@
 					<!--
 						Dogs pictures
 					-->
-					<div class="col-9">
+					<div class="col-9 align-self-center">
+						<br>
 						<div v-for="imageRow in images">
 							<div class="row">
 								<div class="col-4" v-for="image in imageRow">
-									<img class="img-fluid" :src="image" alt="image">
+									<img class="rounded img-fluid" :src="image" alt="image">
 								</div>
 							</div>
+							<br><hr><br>
 						</div>
 						<div v-if="currentBreed != ''">
 							<hr>
-							<button class="btn btn-primary" v-on:click="loadMore">Load more</button>
+							<button class="btn btn-primary" v-on:click="loadMore">Load more</button><br><br>
+						</div>
+						<div v-else>
+							<div class="jumbotron vertical-center">
+								<img src="http://logok.org/wp-content/uploads/2017/03/AGATHA-logo.png" height="50%" width="50%">
+							</div>
 						</div>
 					</div>
 				</div>
@@ -63,17 +71,6 @@
 	<footer>
 		<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
 		<script src="https://cdn.jsdelivr.net/npm/vue@2.5.17/dist/vue.js"></script>
-		<script src="public/IndexApp.js"></script>
-		<style>
-			.sidemenu {
-				height: 100%;
-				width: 20%;
-				position: fixed;
-				z-index: 1;
-				top: 0;
-				left: 0;
-				overflow-x: hidden;
-			}
-		</style>
+		<script src="public/js/IndexApp.js"></script>
 	</footer>
 </html>
