@@ -52,11 +52,11 @@
 									<img class="rounded img-fluid" :src="image" alt="image">
 								</div>
 							</div>
-							<br><hr><br>
+							<br><br>
 						</div>
-						<div v-if="currentBreed != ''">
+						<div v-if="current.breed != ''">
 							<hr>
-							<button class="btn btn-primary" v-on:click="loadMore">Load more</button><br><br>
+							<button v-if="current.length > amount" class="btn btn-primary" v-on:click="loadMore">Load more</button><br><br>
 						</div>
 						<div v-else>
 							<div class="jumbotron vertical-center">

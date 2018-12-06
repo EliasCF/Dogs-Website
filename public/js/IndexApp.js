@@ -4,7 +4,10 @@ var IndexApp = new Vue({
         dogs: {}, //JSON object containing dog breeds and sub-breeds
         images: {}, //Image URLs for the chosen breed
         amount: 21, //Specifies the amount of dogs to load at a time
-        currentBreed: '', //Name of the current chosen breed
+        current: {
+            breed: '', //Name of the current chosen breed
+            length: 0            
+        },
         randomChecked: false
     },
     created: function () {
@@ -24,8 +27,13 @@ var IndexApp = new Vue({
          */
         getBreed: function (breed) {
             //Check if the 'breed' variable is a new breed
-            if (breed != this.currentBreed) {
+            if (breed != this.current.breed) {
                 this.amount = 21;
+
+                //Load the number for the amount of images available for the currently chosen breed
+                $.get(`api/count.php?breed=${breed}`, (data) => {
+                    this.current.length = data;
+                });
 
                 //Jump to the top of the page
                 document.body.scrollTop = 0;
@@ -49,7 +57,7 @@ var IndexApp = new Vue({
 
                 document.title = breed;
                 this.images = dogArray;
-                this.currentBreed = breed;
+                this.current.breed = breed;
             });
         },
         /*
@@ -59,7 +67,7 @@ var IndexApp = new Vue({
         loadMore: function() {
             this.amount += 21;
 
-            this.getBreed(this.currentBreed);
+            this.getBreed(this.current.breed);
         }
     }
 });

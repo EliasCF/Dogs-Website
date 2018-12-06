@@ -55,15 +55,15 @@
 		public function execute() {
 			//Get query string(s)
 			$query_string;
-            parse_str($this->query, $query_string);
+			parse_str($this->query, $query_string);
 			
 			//Check if the defined queries are in the url
 			$no_queries = (count($query_string) > 0 ? false : true);
             
-            /*
-             * Before API call
-             */
-            if ($no_queries) {
+			/*
+ 			 * Before API call
+ 			 */
+			if ($no_queries) {
 				$this->api_string .= $this->no_query_url;
 			} else {
 				foreach ($this->query_object_arr as $key => $value) {
@@ -100,13 +100,13 @@
 
 			//Set response headers
 			header('Access-Control-Allow-Origin: *');
-    		header('Content-Type: application/json; charset=UTF-8');
+			header('Content-Type: application/json; charset=UTF-8');
 			
 			//Set response code
 			http_response_code($this->response_code);
 
 			//Print json data
-			echo json_encode($this->api_call_data);
+			return json_encode($this->api_call_data);
 		}
 	}
 ?>

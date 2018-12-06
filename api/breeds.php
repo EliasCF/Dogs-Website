@@ -12,9 +12,9 @@
     *      - Getting an X amount of dogs of a certain breed:
     *        URL: http://www.website.com/api/breeds.php?breed=beagle&amount=10
     *        NOTE: The 'amount' query string will return an error if used alone
-	*
-	*	   - Get an x amount of random dogs from a specific breed:
-	*		 URL: http://www.website.com/api/breeds.php?breed=beagle&random=10
+    *
+    *	   - Get an x amount of random dogs from a specific breed:
+    *		 URL: http://www.website.com/api/breeds.php?breed=beagle&random=10
     */
     $Configuration = array(
         'breed' => new QueryObject('breed/@/images', true, NULL),
@@ -36,6 +36,7 @@
 		'https://dog.ceo/api/', //Root URL
 		'breeds/list/all', //String to append to root if there are no query strings
 		$Configuration
-	);
-	$a->execute();
+    );
+    
+	echo $a->execute();
 ?>
