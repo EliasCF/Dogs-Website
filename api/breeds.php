@@ -1,7 +1,7 @@
 <?php 
     include 'wrapper/ApiWrapper.php';
 
-    /* 
+    /*
     * Examples:
     *      - Getting all breeds:
     *        URL: http://www.website.com/api/breeds.php
@@ -16,14 +16,17 @@
     *	   - Get an x amount of random dogs from a specific breed:
     *		 URL: http://www.website.com/api/breeds.php?breed=beagle&random=10
     */
-    $Configuration = array(
+    $Configuration = array
+    (
         'breed' => new QueryObject('breed/@/images', true, NULL),
         'random' => new QueryObject('/random/@', true, NULL),
-        'amount' => new QueryObject(NULL, false, function($ApiObject) {
+        'amount' => new QueryObject(NULL, false, function($ApiObject) 
+        {
             $query_string;
             parse_str($ApiObject->query, $query_string);
 
-            if (intval($query_string['amount']) != 0) {
+            if (intval($query_string['amount']) != 0) 
+            {
                 return array_slice(json_decode($ApiObject->api_call_data)->message, 0, $query_string['amount']);
             }
 			
@@ -31,7 +34,8 @@
         })
 	);
 	
-	$a = new ApiWrapper(
+    $a = new ApiWrapper
+    (
 		$_SERVER['QUERY_STRING'], //Query strings from URL
 		'https://dog.ceo/api/', //Root URL
 		'breeds/list/all', //String to append to root if there are no query strings
