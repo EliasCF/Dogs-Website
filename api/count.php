@@ -8,18 +8,22 @@
      */
     $Configuration = array
     (
-        'breed' => new QueryObject('breed/@/images', true, NULL)
+        'breed' => new QueryObject('breed/@/images', true, null)
     );
 
     $api = new ApiWrapper
     (
 		$_SERVER['QUERY_STRING'], //Query strings from URL
 		'https://dog.ceo/api/', //Root URL
-		'breeds/list/all', //String to append to root if there are no query strings
+		null, //String to append to root if there are no query strings
 		$Configuration
     );
 
     $result = $api->execute();
 
-    echo count(explode(",", $result));
+    echo (
+        $result[0] == '[' 
+            ? count(explode(",", $result))
+            : $result
+    );
 ?>

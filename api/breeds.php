@@ -18,9 +18,9 @@
     */
     $Configuration = array
     (
-        'breed' => new QueryObject('breed/@/images', true, NULL),
-        'random' => new QueryObject('/random/@', true, NULL),
-        'amount' => new QueryObject(NULL, false, function($ApiObject) 
+        'breed' => new QueryObject('breed/@/images', true, null),
+        'random' => new QueryObject('/random/@', true, null),
+        'amount' => new QueryObject(null, false, function($ApiObject) 
         {
             $query_string;
             parse_str($ApiObject->query, $query_string);

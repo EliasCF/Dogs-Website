@@ -1,4 +1,6 @@
 <?php
+	define('ERROR_MESSAGE', '{ \'status\': \'error\' }');
+
 	//This class defines the name and behavior of a query
 	class QueryObject {
 		//Url that will be appended to the root url
@@ -7,7 +9,6 @@
 		//an annonymous function
 		public $functionallity;
 		
-		//
 		public $do_before_call = false;
 		
 		public function __construct($_url, $_do_before_call, $_functionallity) 
@@ -62,13 +63,22 @@
 			
 			//Check if the defined queries are in the url
 			$no_queries = (count($query_string) > 0 ? false : true);
-            
+
 			/*
  			 * Before API call
  			 */
 			if ($no_queries) 
 			{
-				$this->api_string .= $this->no_query_url;
+				if ($this->no_query_url == null) 
+				{
+					$this->error = true;
+					$this->response_code = 500;
+					$this->api_call_data = ERROR_MESSAGE;
+				}
+				else 
+				{
+					$this->api_string .= $this->no_query_url;
+				}
 			} 
 			else 
 			{
@@ -86,29 +96,32 @@
 				}
 			}
 
-			ini_set("allow_url_fopen", 1);
-			$this->api_call_data = file_get_contents($this->api_string);
-
-            /*
-             * After API call
-             */
-			$function_flag = false;
-			foreach ($this->query_object_arr as $key => $value) 
+			if (!$this->error) 
 			{
-				if (isset($query_string[$key])) 
-				{
-					if (!$value->do_before_call) 
-					{
-						$this->api_call_data = $value->functionallity->__invoke($this);
+				ini_set("allow_url_fopen", 1);
+				$this->api_call_data = file_get_contents($this->api_string);
 
-						$function_flag = true;
+				/*
+				* After API call
+				*/
+				$function_flag = false;
+				foreach ($this->query_object_arr as $key => $value) 
+				{
+					if (isset($query_string[$key])) 
+					{
+						if (!$value->do_before_call) 
+						{
+							$this->api_call_data = $value->functionallity->__invoke($this);
+
+							$function_flag = true;
+						}
 					}
 				}
-			}
 
-			if (!$function_flag) 
-			{
-				$this->api_call_data = json_decode($this->api_call_data)->message;
+				if (!$function_flag) 
+				{
+					$this->api_call_data = json_decode($this->api_call_data)->message;
+				}
 			}
 
 			//Set response headers
