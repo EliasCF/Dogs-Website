@@ -3,12 +3,15 @@ var IndexApp = new Vue({
     data: {
         dogs: {}, //JSON object containing dog breeds and sub-breeds
         images: {}, //Image URLs for the chosen breed
+        imageRowLength: 3,
+        columnSize: 4,
         amount: 21, //Specifies the amount of dogs to load at a time
         current: {
             breed: '', //Name of the current chosen breed
             length: 0            
         },
-        randomChecked: false
+        randomChecked: false,
+        rowsizeOptions: [2, 3, 4]
     },
     created: function () {
         //Load a list of dog breeds
@@ -51,8 +54,8 @@ var IndexApp = new Vue({
 
                 //Sort data into rows of 3
                 dogArray = [];
-                for (i = 0; i < data.length; i += 3) {
-                    dogArray.push(data.slice(i, i + 3));
+                for (i = 0; i < data.length; i += this.imageRowLength) {
+                    dogArray.push(data.slice(i, i + this.imageRowLength));
                 }
 
                 document.title = breed;
@@ -65,9 +68,28 @@ var IndexApp = new Vue({
          *      Loads an additional 21 images
          */
         loadMore: function() {
-            this.amount += 21;
+            this.amount += (this.imageRowLength == 3 ? 21 : 20);;
 
             this.getBreed(this.current.breed);
+        },
+        /*
+         * @Description:
+         *      Change how many images there are in an image row
+         * 
+         * @Params:
+         *      amount (int):
+         *          The new amount of images in a row
+         */
+        changeRowsize: function (amount) {
+            //Make sure a breed has been chosen
+            if (this.current.breed != '') {
+                this.imageRowLength = amount;
+                this.columnSize = 12 / amount;
+                
+                this.amount = (amount == 3 ? 21 : 20);
+                
+                this.getBreed(this.current.breed);
+            }
         }
     }
 });
