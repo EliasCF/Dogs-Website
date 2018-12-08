@@ -69,18 +69,19 @@
  			 */
 			if ($no_queries) 
 			{
+				//If there is no queries and no, no_query_url has been defined, and error will occur
 				if ($this->no_query_url == null) 
 				{
 					$this->error = true;
 					$this->response_code = 500;
 					$this->api_call_data = ERROR_MESSAGE;
 				}
-				else 
+				else
 				{
 					$this->api_string .= $this->no_query_url;
 				}
-			} 
-			else 
+			}
+			else
 			{
 				foreach ($this->query_object_arr as $key => $value) 
 				{
@@ -99,29 +100,39 @@
 			if (!$this->error) 
 			{
 				ini_set("allow_url_fopen", 1);
-				$this->api_call_data = file_get_contents($this->api_string);
+				$this->api_call_data = @file_get_contents($this->api_string);
 
-				/*
-				* After API call
-				*/
-				$function_flag = false;
-				foreach ($this->query_object_arr as $key => $value) 
+				if($this->api_call_data !== false) 
 				{
-					if (isset($query_string[$key])) 
+					/*
+					* After API call
+					*/
+					$function_flag = false;
+					foreach ($this->query_object_arr as $key => $value) 
 					{
-						if (!$value->do_before_call) 
+						if (isset($query_string[$key])) 
 						{
-							$this->api_call_data = $value->functionallity->__invoke($this);
+							if (!$value->do_before_call) 
+							{
+								$this->api_call_data = $value->functionallity->__invoke($this);
 
-							$function_flag = true;
+								$function_flag = true;
+							}
 						}
 					}
-				}
 
-				if (!$function_flag) 
-				{
-					$this->api_call_data = json_decode($this->api_call_data)->message;
+					if (!$function_flag) 
+					{
+						$this->api_call_data = json_decode($this->api_call_data)->message;
+					}
 				}
+			}
+
+			//Send an error if the api call was not successful
+			if ($this->api_call_data === false) 
+			{
+				$this->response_code = 500;
+				$this->api_call_data = ERROR_MESSAGE;
 			}
 
 			//Set response headers
