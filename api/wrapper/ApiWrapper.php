@@ -1,7 +1,6 @@
 <?php
 	define('ERROR_MESSAGE', '{ \'status\': \'error\' }');
 
-	//This class defines the name and behavior of a query
 	class QueryObject {
 		//Url that will be appended to the root url
 		public $url;
@@ -54,7 +53,11 @@
 			$this->no_query_url = $_no_query_url;
 			$this->query_object_arr = $_query_object_arr;
 		}
-		
+
+		/*
+		 * Description:
+		 * 		This function appends the appropriate string, to the root url in $this->api_string
+		 */
 		public function execute() 
 		{
 			//Get query string(s)
@@ -64,22 +67,50 @@
 			//Check if the defined queries are in the url
 			$no_queries = (count($query_string) > 0 ? false : true);
 
-			/*
- 			 * Before API call
- 			 */
+			$this->append_url_path($no_queries, $query_string);
+
+			if (!$this->error) 
+			{
+				ini_set("allow_url_fopen", 1);
+				$this->api_call_data = @file_get_contents($this->api_string);
+
+				$this->execute_query_object_functions($query_string);
+			}
+
+			//Send an error if the api call was not successful
+			if ($this->api_call_data === false) 
+			{
+				$this->ErrorOccured();
+			}
+
+			//Set response headers
+			header('Access-Control-Allow-Origin: *');
+			header('Content-Type: application/json; charset=UTF-8');
+			
+			//Set response code
+			http_response_code($this->response_code);
+
+			//Print json data
+			return json_encode($this->api_call_data);
+		}
+		
+		/*
+		 * Description:
+		 * 		Appends the appropriate string, to the root url in $this->api_string
+		 */
+		private function append_url_path($no_queries, $query_string) 
+		{
 			if ($no_queries) 
 			{
 				//If there is no queries and no, no_query_url has been defined, and error will occur
 				if ($this->no_query_url == null) 
 				{
-					$this->error = true;
-					$this->response_code = 500;
-					$this->api_call_data = ERROR_MESSAGE;
+					$this->ErrorOccured();
+
+					return;
 				}
-				else
-				{
-					$this->api_string .= $this->no_query_url;
-				}
+
+				$this->api_string .= $this->no_query_url;
 			}
 			else
 			{
@@ -97,53 +128,46 @@
 				}
 			}
 
-			if (!$this->error) 
+			return;
+		}
+
+		/*
+		 * Description:
+		 * 		Executes functions of any $this->query_object_arr QueryObjects that has a function and is in the array
+		 */
+		private function execute_query_object_functions($query_string) 
+		{
+			if($this->api_call_data !== false) 
 			{
-				ini_set("allow_url_fopen", 1);
-				$this->api_call_data = @file_get_contents($this->api_string);
-
-				if($this->api_call_data !== false) 
+				$function_flag = false;
+				foreach ($this->query_object_arr as $key => $value) 
 				{
-					/*
-					* After API call
-					*/
-					$function_flag = false;
-					foreach ($this->query_object_arr as $key => $value) 
+					if (isset($query_string[$key]) && !$value->do_before_call) 
 					{
-						if (isset($query_string[$key])) 
-						{
-							if (!$value->do_before_call) 
-							{
-								$this->api_call_data = $value->functionallity->__invoke($this);
+							$this->api_call_data = $value->functionallity->__invoke($this);
 
-								$function_flag = true;
-							}
-						}
-					}
-
-					if (!$function_flag) 
-					{
-						$this->api_call_data = json_decode($this->api_call_data)->message;
+							$function_flag = true;
 					}
 				}
+
+				if (!$function_flag) 
+				{
+					$this->api_call_data = json_decode($this->api_call_data)->message;
+				}
 			}
+		}
 
-			//Send an error if the api call was not successful
-			if ($this->api_call_data === false) 
-			{
-				$this->response_code = 500;
-				$this->api_call_data = ERROR_MESSAGE;
-			}
-
-			//Set response headers
-			header('Access-Control-Allow-Origin: *');
-			header('Content-Type: application/json; charset=UTF-8');
-			
-			//Set response code
-			http_response_code($this->response_code);
-
-			//Print json data
-			return json_encode($this->api_call_data);
+		/*
+		 * Description:
+		 * 		Cause an error to occur.
+		 * 		This will cause the execution() function to send a response code of 500,
+		 * 		and a json error-string.
+		 */
+		private function ErrorOccured() 
+		{
+			$this->error = true;
+			$this->response_code = 500;
+			$this->api_call_data = ERROR_MESSAGE;
 		}
 	}
 ?>

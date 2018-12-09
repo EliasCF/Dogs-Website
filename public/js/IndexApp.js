@@ -21,10 +21,10 @@ var IndexApp = new Vue({
     },
     methods: {
         /*
-         * @Description:
+         * Description:
          *      Loads an x amount of a certain breed from the api wrapper
          * 
-         * @Params:
+         * Params:
          *      breed (string): 
          *          The breed to be fetched
          */
@@ -64,7 +64,7 @@ var IndexApp = new Vue({
             });
         },
         /*
-         * @Description:
+         * Description:
          *      Loads an additional 21 images
          */
         loadMore: function() {
@@ -73,10 +73,10 @@ var IndexApp = new Vue({
             this.getBreed(this.current.breed);
         },
         /*
-         * @Description:
+         * Description:
          *      Change how many images there are in an image row
          * 
-         * @Params:
+         * Params:
          *      amount (int):
          *          The new amount of images in a row
          */
