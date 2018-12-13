@@ -90,6 +90,15 @@ var IndexApp = new Vue({
                 
                 this.getBreed(this.current.breed);
             }
+        },
+        refresh: function () {
+            this.images = {};
+            this.imageRowLength = 3;
+            this.columnSize = 4;
+            this.amount = 21; 
+            this.current.breed = ''; 
+            this.current.length = 0;            
+            this.randomChecked = false;
         }
     }
 });
